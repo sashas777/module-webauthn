@@ -1,0 +1,19 @@
+<?php
+/**
+ * @author     The S Group <support@sashas.org>
+ * @copyright  2020  Sashas IT Support Inc. (https://www.sashas.org)
+ * @license     http://opensource.org/licenses/GPL-3.0  GNU General Public License, version 3 (GPL-3.0)
+ */
+?>
+<button id="add-new-device" type="submit" title="<?= $block->escapeHtmlAttr(__('Register device')) ?>"
+        class="action primary">
+    <span><?= $block->escapeHtml(__('Register device')) ?></span>
+</button>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "TheSGroup_WebAuthn/js/webAuthnRegister": {
+            }
+        }
+    }
+</script>
