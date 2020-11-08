@@ -7,7 +7,7 @@
 var config = {
     map: {
         '*': {
-            webAuthnRegister:    'TheSGroup_WebAuthn/js/webAuthnRegister',
+            webAuthnRegister:    'TheSGroup_WebAuthn/js/view/webAuthnRegister',
         }
     }
 };

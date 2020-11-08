@@ -5,14 +5,24 @@
  * @license     http://opensource.org/licenses/GPL-3.0  GNU General Public License, version 3 (GPL-3.0)
  */
 ?>
-<button id="add-new-device" type="submit" title="<?= $block->escapeHtmlAttr(__('Register device')) ?>"
-        class="action primary">
-    <span><?= $block->escapeHtml(__('Register device')) ?></span>
-</button>
+<div>
+    Device Name
+    <input name="device_name" />
+    <button id="add-new-device" type="submit" title="<?= $block->escapeHtmlAttr(__('Register device')) ?>"
+            class="action primary">
+        <span><?= $block->escapeHtml(__('Add a new device')) ?></span>
+    </button>
+</div>
+
+<div>
+    Registered Devices:
+</div>
+
+
 <script type="text/x-magento-init">
     {
         "*": {
-            "TheSGroup_WebAuthn/js/webAuthnRegister": {
+            "TheSGroup_WebAuthn/js/view/webAuthnRegister": {
             }
         }
     }

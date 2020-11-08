@@ -2,8 +2,8 @@
 
 The Magento 2 module which provides ability to login using the WebAuthn.
 
-## Holded till the first 2.4.x release due to dependency on Spomky-Labs/otphp version since 9.1.2
-- https://devdocs.magento.com/guides/v2.4/release-notes/packages-open-source.html
+## Dependacies
+- Magento 2.4.x
 
 ## Prerequisites
 - PHP extension ext-gmp
