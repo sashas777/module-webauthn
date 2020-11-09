@@ -39,7 +39,7 @@ define([
                 }
             }).fail(function () {
                 messageContainer.addErrorMessage({
-                    'message': $t('Could not register authenticator. Please try later.')
+                    'message': $t('Could not verify authenticator. Please try later.')
                 });
                 $(document.body).trigger('processStop');
             });

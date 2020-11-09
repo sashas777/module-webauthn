@@ -25,6 +25,7 @@ use Webauthn\Server;
 use Webauthn\PublicKeyCredentialSource;
 use TheSGroup\WebAuthn\Api\Data\CredentialSourceInterfaceFactory;
 use Magento\Store\Model\StoreManagerInterface;
+use Laminas\Uri\Http;
 
 class Registration implements RegistrationInterface
 {
@@ -41,6 +42,7 @@ class Registration implements RegistrationInterface
     private $serverRequestCreatorFactory;
     private $psr17FactoryFactory;
     private $storeManager;
+    private $http;
 
     public function __construct(
         PublicKeyCredentialRpEntityFactory $rpEntityFactory,
@@ -52,7 +54,8 @@ class Registration implements RegistrationInterface
         CredentialSourceInterfaceFactory $credentialSourceInterfaceFactory,
         ServerRequestCreatorFactory $serverRequestCreatorFactory,
         Psr17FactoryFactory $psr17FactoryFactory,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        Http $http
     ) {
         $this->rpEntityFactory = $rpEntityFactory;
         $this->credentialUserEntityFactory = $credentialUserEntityFactory;
@@ -64,6 +67,7 @@ class Registration implements RegistrationInterface
         $this->serverRequestCreatorFactory = $serverRequestCreatorFactory;
         $this->psr17FactoryFactory = $psr17FactoryFactory;
         $this->storeManager = $storeManager;
+        $this->http = $http;
     }
 
     private function getServer(): ?Server
@@ -72,13 +76,13 @@ class Registration implements RegistrationInterface
 
             //@todo icon
             $websiteUrl = $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_WEB);
-            $websiteDomain = parse_url($websiteUrl,  PHP_URL_HOST);
+            $url = $this->http->parse($websiteUrl);
 
             /** @var \Webauthn\PublicKeyCredentialRpEntity $rpEntity */
             $rpEntity = $this->rpEntityFactory->create(
                 [
                     'name' => $this->storeManager->getStore()->getName(),
-                    'id' => $websiteDomain,
+                    'id' => $url->getHost(),
                     'icon' => null
                 ]
             );
@@ -92,20 +96,14 @@ class Registration implements RegistrationInterface
         return $this->server;
     }
 
-    public function creationRequest(int $customerId)
+    public function creationRequest(int $customerId, string $deviceName)
     {
 
         $customer = $this->customerRepository->getById($customerId);
         $name = $customer->getFirstname().' '.$customer->getLastname();
         $email = $customer->getEmail();
         $customerId = (string) $customer->getId();
-        $credentialCreationOptions = $this->credentialSourceRepository->getCredentialCreationOptions(
-            (int) $customerId,
-            (int) $customer->getStoreId()
-        );
-        if ($credentialCreationOptions->getEntityId()) {
-            return $credentialCreationOptions->getCredentialCreationOptions();
-        }
+
         /** @var \Webauthn\PublicKeyCredentialUserEntity $userEntity */
         $userEntity = $this->credentialUserEntityFactory->create(
             [
@@ -131,10 +129,17 @@ class Registration implements RegistrationInterface
         $credentialCreationOptions = $this->serializer->serialize($publicKeyCredentialCreationOptions);
 
         /** @var \TheSGroup\WebAuthn\Api\Data\CredentialSourceInterface $credentialSource */
-        $credentialSource = $this->credentialSourceInterfaceFactory->create();
+        $credentialSource = $this->credentialSourceRepository->getCredentialCreationOptions(
+            (int) $customerId,
+            (int) $customer->getStoreId()
+        );
+        if (!$credentialSource->getEntityId()) {
+            $credentialSource = $this->credentialSourceInterfaceFactory->create();
+        }
         $credentialSource->setCustomerId($customerId);
         $credentialSource->setStoreId((string)$customer->getStoreId());
         $credentialSource->setCredentialCreationOptions($credentialCreationOptions);
+        $credentialSource->setDeviceName($deviceName);
         $this->credentialSourceRepository->save($credentialSource);
 
         return $credentialCreationOptions;

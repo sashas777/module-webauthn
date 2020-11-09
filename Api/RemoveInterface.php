@@ -10,24 +10,16 @@ declare(strict_types=1);
 namespace TheSGroup\WebAuthn\Api;
 
 /**
- * Interface RegistrationInterface
+ * Interface RemoveInterface
  */
-interface RegistrationInterface
+interface RemoveInterface
 {
 
     /**
      * @param int $customerId
-     * @param string $deviceName
+     * @param int $entityId
      *
      * @return mixed
      */
-    public function creationRequest(int $customerId, string $deviceName);
-
-    /**
-     * @param int $customerId
-     * @param mixed $credential
-     *
-     * @return mixed
-     */
-    public function responseVerification(int $customerId, $credential);
+    public function removeDevice(int $customerId, int $entityId);
 }

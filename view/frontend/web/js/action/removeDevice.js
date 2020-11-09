@@ -23,11 +23,10 @@ define([
             messageContainer = messageContainer || globalMessageList;
 
             return storage.post(
-                'rest/V1/webauthn/creation',
+                'rest/V1/webauthn/remove',
                 JSON.stringify(requestData),
                 isGlobal
             ).done(function (response) {
-                messageContainer.addErrorMessage('asd');
                 if (response.errors) {
                     messageContainer.addErrorMessage(response);
                 } else {
@@ -46,7 +45,7 @@ define([
     /**
      * @param {Function} callback
      */
-    action.creationRequestRegisterCallback = function (callback) {
+    action.removeDeviceRegisterCallback = function (callback) {
         callbacks.push(callback);
     };
 

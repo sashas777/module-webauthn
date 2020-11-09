@@ -4,21 +4,70 @@
  * @copyright  2020  Sashas IT Support Inc. (https://www.sashas.org)
  * @license     http://opensource.org/licenses/GPL-3.0  GNU General Public License, version 3 (GPL-3.0)
  */
+/** @var \Magento\Framework\View\Element\Template $block */
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \TheSGroup\WebAuthn\ViewModel\Customer\Devices $viewModel */
+$viewModel = $block->getViewModel();
+$devices = $viewModel->getDevices();
 ?>
-<div>
-    Device Name
-    <input name="device_name" />
-    <button id="add-new-device" type="submit" title="<?= $block->escapeHtmlAttr(__('Register device')) ?>"
-            class="action primary">
-        <span><?= $block->escapeHtml(__('Add a new device')) ?></span>
-    </button>
+<div class="new-device">
+    <form id="new-device-form" data-mage-init='{"validation": {}}'>
+        <fieldset class="fieldset">
+            <legend class="legend"><span><?= $escaper->escapeHtml(__('Add New Device')) ?></span></legend>
+            <div class="field field-device-name required">
+                <label class="label" for="lastname"><span><?= $escaper->escapeHtml(__('Device Name')) ?></span></label>
+                <div class="control">
+                    <input type="text" id="device_name" name="device_name" value=""
+                           title="<?= $escaper->escapeHtml(__('Device Name')) ?>" class="input-text required-entry"
+                           data-validate="{required:true}" aria-required="true">
+                </div>
+            </div>
+            <button id="add-new-device" type="submit" title="<?= $escaper->escapeHtmlAttr(__('Add New Device')) ?>"
+                    class="action primary">
+                <span><?= $escaper->escapeHtml(__('Add New Device')) ?></span>
+            </button>
+        </fieldset>
+    </form>
 </div>
-
-<div>
-    Registered Devices:
+<div class="stored-devices">
+    <legend class="legend"><span><?= $escaper->escapeHtml(__('Stored Devices')) ?></span></legend>
+    <?php if ($devices->getTotalCount() < 1): ?>
+        <div class="message info empty"><span><?= $escaper->escapeHtml(__('You have no stored devices.')) ?></span></div>
+    <?php else: ?>
+        <table id="my-webauthn-devices-table" class="data table table-webauthn-devices">
+            <caption class="table-caption"><?= $escaper->escapeHtml(__('Devices')) ?></caption>
+            <thead>
+            <tr>
+                <th scope="col" class="col device-name"><?= $escaper->escapeHtml(__('Device Name')) ?></th>
+                <th scope="col" class="col date"><?= $escaper->escapeHtml(__('Added Date')) ?></th>
+                <th scope="col" class="col action"><?= $escaper->escapeHtml(__('Action')) ?></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+            $items = $devices->getItems();
+            foreach ($items as $item):
+                ?>
+                <tr data-id="<?= $item->getEntityId(); ?>">
+                    <td data-th="<?= $escaper->escapeHtml(__('Device Name')) ?>" class="col device-name">
+                        <?= $item->getDeviceName() ?>
+                    </td>
+                    <td data-th="<?= $escaper->escapeHtml(__('Added Date')) ?>" class="col date">
+                        <?= $viewModel->formatDate($item->getCreatedAt()) ?>
+                    </td>
+                    <td data-th="<?= $escaper->escapeHtml(__('Action')) ?>" class="col action">
+                        <button id="remove-device-<?= $item->getEntityId(); ?>" type="button"
+                                data-id="<?= $item->getEntityId(); ?>" data-action="remove"
+                                title="<?= $escaper->escapeHtmlAttr(__('Remove Device')) ?>" class="action primary">
+                            <span><?= $escaper->escapeHtml(__('Remove Device')) ?></span>
+                        </button>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
 </div>
-
-
 <script type="text/x-magento-init">
     {
         "*": {

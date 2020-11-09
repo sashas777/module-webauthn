@@ -248,8 +248,6 @@ class CredentialSourceRepository implements CredentialSourceRepositoryInterface
      */
     public function saveCredentialSource(PublicKeyCredentialSource $publicKeyCredentialSource): void
     {
-        var_dump($publicKeyCredentialSource->getPublicKeyCredentialId());
-        var_dump($publicKeyCredentialSource->getUserHandle());
        die('asd');
     }
 

@@ -10,6 +10,9 @@
     <body>
         <referenceContainer name="content">
             <block name="webauth.devices" template="TheSGroup_WebAuthn::customer_account/devices.phtml" cacheable="false">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">TheSGroup\WebAuthn\ViewModel\Customer\Devices</argument>
+                </arguments>
             </block>
         </referenceContainer>
     </body>

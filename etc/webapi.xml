@@ -6,7 +6,7 @@
   -->
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
-    <route url="/V1/webauthn/creation" method="GET">
+    <route url="/V1/webauthn/creation" method="POST">
         <service class="TheSGroup\WebAuthn\Api\RegistrationInterface" method="creationRequest"/>
         <resources>
             <resource ref="self"/>
@@ -17,6 +17,15 @@
     </route>
     <route url="/V1/webauthn/verification" method="POST">
         <service class="TheSGroup\WebAuthn\Api\RegistrationInterface" method="responseVerification"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="customerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+    <route url="/V1/webauthn/remove" method="POST">
+        <service class="TheSGroup\WebAuthn\Api\RemoveInterface" method="removeDevice"/>
         <resources>
             <resource ref="self"/>
         </resources>
