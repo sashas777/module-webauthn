@@ -4,9 +4,9 @@
     "homepage": "https://www.sashas.org/",
     "type": "magento2-module",
     "require": {
-        "php": "~7.1.0||~7.2.0||~7.3.0",
+        "php": "~7.3.0||~7.4.0",
         "magento/framework": "*",
-        "magento/module-customer": "102.0.*",
+        "magento/module-customer": "103.0.*",
         "web-auth/webauthn-lib": "~3.2.10",
         "nyholm/psr7-server": "~1.0.0",
         "nyholm/psr7": "~1.3.1"
